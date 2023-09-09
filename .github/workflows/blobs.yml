@@ -1,4 +1,4 @@
-name: Recovery Build
+name: Update Blobs
 
 on:
   workflow_dispatch:
@@ -19,18 +19,8 @@ jobs:
         chmod +x ./workspace/dumpblobs.sh
         ./workspace/dumpblobs.sh
       
-    - name: Upload to Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
-          ${{ steps.pwd.outputs.workspace-folder }}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
-        name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
-        tag_name: ${{ github.run_id }}
-        body: |
-          Manifest: ${{ github.event.inputs.MANIFEST_BRANCH }}
-          Device: ${{ github.event.inputs.DEVICE_NAME }}
-          Target: ${{ github.event.inputs.BUILD_TARGET }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload
+      run: |
+        cd vendor/samsung/x1s
+        git push https://${{ secrets.GITHUB_TOKEN }}@github.com/halal-beef/proprietary_vendor_samsung_x1s
 
